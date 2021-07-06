@@ -1,0 +1,25 @@
+ 606 Bytes
+ 
+{{- /*
+commonlib.labelize takes a dict or map and generates labels.
+Values will be quoted. Keys will not.
+Example output:
+  first: "Matt"
+  last: "Butcher"
+*/ -}}
+{{- define "commonlib.labelize" -}}
+{{- range $k, $v := . }}
+{{ $k }}: {{ $v | quote }}
+{{- end -}}
+{{- end -}}
+
+{{- /*
+commonlib.labels.standard prints the standard Helm labels.
+The standard labels are frequently used in metadata.
+*/ -}}
+{{- define "commonlib.labels.standard" -}}
+app: {{ template "commonlib.name" . }}
+chart: {{ template "commonlib.chartref" . }}
+heritage: {{ .Release.Service | quote }}
+release: {{ .Release.Name | quote }}
+{{- end -}}

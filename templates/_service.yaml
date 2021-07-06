@@ -1,0 +1,16 @@
+{{- define "commonlib.service.tpl" -}}
+apiVersion: v1
+kind: Service
+{{ template "commonlib.metadata" . }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+  selector:
+    {{- include "commontest.selectorLabels" . | nindent 4 }}
+{{- end -}}
+{{- define "commonlib.service" -}}
+{{- template "commonlib.util.merge" (append . "commonlib.service.tpl") -}}
+{{- end -}}

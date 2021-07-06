@@ -1,0 +1,10 @@
+{{- /*
+commonlib.metadata creates a standard metadata header.
+It creates a 'metadata:' section with name and labels.
+*/ -}}
+{{ define "commonlib.metadata" -}}
+metadata:
+  name: {{ template "commonlib.fullname" . }}
+  labels:
+{{ include "commonlib.labels.standard" . | indent 4 -}}
+{{- end -}}

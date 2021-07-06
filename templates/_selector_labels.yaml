@@ -1,0 +1,4 @@
+{{- define "commonlib.selectorLabels" }}
+app.kubernetes.io/name: {{ template "commonlib.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
+{{- end -}}

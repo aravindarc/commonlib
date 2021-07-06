@@ -1,0 +1,42 @@
+{{- define "commonlib.deployment.tpl" -}}
+apiVersion: apps/v1
+kind: Deployment
+{{ template "commonlib.metadata" . }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "commontest.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "commontest.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      -
+{{ include "commonlib.container.tpl" . | indent 8 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ template "commonlib.name" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end -}}
+{{- define "commonlib.deployment" -}}
+{{- template "commonlib.util.merge" (append . "commonlib.deployment.tpl") -}}
+{{- end -}}

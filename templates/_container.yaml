@@ -1,0 +1,15 @@
+{{- define "commonlib.container.tpl" -}}
+name: {{ .Chart.Name }}
+image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+imagePullPolicy: {{ .Values.image.pullPolicy }}
+ports:
+- name: http
+  containerPort: 80
+resources:
+{{ toYaml .Values.resources | indent 2 }}
+{{- end -}}
+{{- define "commonlib.container" -}}
+{{- /* clear new line so indentation works correctly */ -}}
+{{- println "" -}}
+{{- include "commonlib.util.merge" (append . "commonlib.container.tpl") | indent 8 -}}
+{{- end -}}
